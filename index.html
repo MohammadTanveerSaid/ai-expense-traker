@@ -1,0 +1,179 @@
+x<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Expense Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon">✦</div>
+        <div>
+          <h1>AI Expense</h1>
+          <p>Smart Finance</p>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <button class="nav-item active" data-view="dashboard">
+          <span class="nav-icon">◫</span>
+          Dashboard
+        </button>
+        <button class="nav-item" data-view="transactions">
+          <span class="nav-icon">≡</span>
+          Transactions
+        </button>
+        <button class="nav-item" data-view="insights">
+          <span class="nav-icon">◈</span>
+          AI Insights
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="budget-card">
+          <span class="budget-label">Monthly Budget</span>
+          <strong id="budgetAmount">₹25,000</strong>
+          <div class="budget-bar">
+            <div class="budget-fill" id="budgetFill"></div>
+          </div>
+          <span class="budget-hint" id="budgetHint">0% used</span>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <p class="greeting" id="greeting">Good evening</p>
+          <h2>Your Financial Overview</h2>
+        </div>
+        <button class="btn-primary" id="openModalBtn">
+          <span>+</span> Add Transaction
+        </button>
+      </header>
+
+      <!-- Dashboard View -->
+      <section class="view active" id="dashboardView">
+        <div class="stats-grid">
+          <article class="stat-card highlight">
+            <span class="stat-label">Total Balance</span>
+            <strong class="stat-value" id="totalBalance">₹0</strong>
+            <span class="stat-change positive" id="balanceChange">+₹0 this month</span>
+          </article>
+          <article class="stat-card">
+            <span class="stat-label">Total Expenses</span>
+            <strong class="stat-value" id="totalExpenses">₹0</strong>
+            <span class="stat-change negative" id="expenseChange">0 transactions</span>
+          </article>
+          <article class="stat-card">
+            <span class="stat-label">Total Income</span>
+            <strong class="stat-value" id="totalIncome">₹0</strong>
+            <span class="stat-change positive" id="incomeChange">0 sources</span>
+          </article>
+        </div>
+
+        <div class="content-grid">
+          <section class="panel">
+            <div class="panel-header">
+              <h3>Recent Transactions</h3>
+              <button class="text-btn" id="seeAllBtn">See all</button>
+            </div>
+            <ul class="transaction-list" id="recentList"></ul>
+          </section>
+
+          <section class="panel ai-panel">
+            <div class="panel-header">
+              <h3>AI Quick Insight</h3>
+              <span class="ai-badge">AI</span>
+            </div>
+            <p class="ai-message" id="aiMessage">
+              Add a few transactions and I'll analyze your spending patterns.
+            </p>
+            <div class="category-breakdown" id="categoryBreakdown"></div>
+          </section>
+        </div>
+      </section>
+
+      <!-- Transactions View -->
+      <section class="view" id="transactionsView">
+        <div class="panel">
+          <div class="panel-header">
+            <h3>All Transactions</h3>
+            <div class="filter-tabs">
+              <button class="filter-tab active" data-filter="all">All</button>
+              <button class="filter-tab" data-filter="expense">Expenses</button>
+              <button class="filter-tab" data-filter="income">Income</button>
+            </div>
+          </div>
+          <ul class="transaction-list full" id="fullList"></ul>
+        </div>
+      </section>
+
+      <!-- AI Insights View -->
+      <section class="view" id="insightsView">
+        <div class="insights-grid">
+          <article class="panel insight-card">
+            <span class="insight-icon">📊</span>
+            <h3>Spending Trend</h3>
+            <p id="trendInsight">Your spending data will appear here.</p>
+          </article>
+          <article class="panel insight-card">
+            <span class="insight-icon">🎯</span>
+            <h3>Top Category</h3>
+            <p id="topCategoryInsight">No category data yet.</p>
+          </article>
+          <article class="panel insight-card">
+            <span class="insight-icon">💡</span>
+            <h3>Smart Tip</h3>
+            <p id="smartTip">Start tracking daily expenses to get personalized tips.</p>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Add Transaction Modal -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Add Transaction</h3>
+        <button class="close-btn" id="closeModalBtn" aria-label="Close">&times;</button>
+      </div>
+
+      <div class="type-toggle">
+        <button class="type-btn active" data-type="expense">Expense</button>
+        <button class="type-btn" data-type="income">Income</button>
+      </div>
+
+      <form id="transactionForm">
+        <label class="field">
+          <span>Description</span>
+          <input type="text" id="description" placeholder="e.g. Groceries, Salary" required>
+        </label>
+
+        <label class="field">
+          <span>Amount (₹)</span>
+          <input type="number" id="amount" placeholder="0.00" step="0.01" min="0.01" required>
+        </label>
+
+        <label class="field">
+          <span>Category</span>
+          <div class="category-chips" id="categoryChips"></div>
+        </label>
+
+        <button type="submit" class="btn-primary full">Save Transaction</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
